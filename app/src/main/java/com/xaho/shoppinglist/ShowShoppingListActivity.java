@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
 
 /**
@@ -29,7 +28,7 @@ public class ShowShoppingListActivity extends Activity implements View.OnDragLis
         shoppingListItemAdapter = new ShoppingListItemAdapter(getApplicationContext(),shoppingList.items);
         lv.setAdapter(shoppingListItemAdapter);
         lv.setOnDragListener(this);
-        lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        /*lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 ClipData cp = ClipData.newPlainText("dragShoppingListItem","reorder");
@@ -37,7 +36,8 @@ public class ShowShoppingListActivity extends Activity implements View.OnDragLis
                 view.startDrag(cp,sb,view,0);
                 return true;
             }
-        });
+        });*/
+
 
         View view = findViewById(R.id.emptyItem);
         view.setOnTouchListener(new View.OnTouchListener() {
@@ -65,8 +65,9 @@ public class ShowShoppingListActivity extends Activity implements View.OnDragLis
         ///Log.i(tag,"");
         if (event.getAction() == DragEvent.ACTION_DROP & v.getClass().getCanonicalName().equals(ListView.class.getCanonicalName())) {
             if (event.getClipData().toString().contains("new")) {
-                shoppingList.items.add("Item " + shoppingList.items.size());
-                shoppingListItemAdapter.notifyDataSetChanged();
+                shoppingListItemAdapter.add("Item " + shoppingListItemAdapter.getCount());
+                //shoppingList.items.add("Item " + shoppingList.items.size());
+                //shoppingListItemAdapter.notifyDataSetChanged();
             } else {
                 //reorder
             }

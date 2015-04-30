@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 
@@ -16,17 +18,37 @@ public class ShoppingListItemAdapter extends ArrayAdapter<String> {
     private final Context context;
     private final ArrayList<String> shoppingList;
     private String tag = "ShoppingListItemAdapter";
+    LayoutInflater li;
 
     public ShoppingListItemAdapter(Context context, ArrayList<String> shoppingList) {
         super(context, R.layout.shopping_list_item, shoppingList);
         this.shoppingList = shoppingList;
         this.context = context;
+        li = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public static class ViewHolder {
+        public CheckBox checkBox;
+        public EditText editText;
+        public EditText editTextextra;
     }
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        LayoutInflater li = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = li.inflate(R.layout.shopping_list_item,parent,false);
+        View rowView = null;
+        if (convertView != null)
+            rowView = convertView;
+        else {
+            rowView = li.inflate(R.layout.shopping_list_item, parent, false);
+            ViewHolder holder = new ViewHolder();
+
+            rowView.setTag(holder);
+        }
+        ViewHolder tag = (ViewHolder) rowView.getTag();
+
+        return rowView;
+
+        //return li.inflate(R.layout.shopping_list_item,parent,false);
         //EditText et = (EditText)rowView.findViewById(R.id.editText);
         //et.setText(shoppingList.get(position));
        /* et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -42,6 +64,5 @@ public class ShoppingListItemAdapter extends ArrayAdapter<String> {
                 }
             }
         });*/
-        return rowView;
     }
 }

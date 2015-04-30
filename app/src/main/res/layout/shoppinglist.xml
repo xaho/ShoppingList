@@ -24,8 +24,6 @@
     <ListView
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:windowSoftInputMode="adjustPan|adjustResize|stateHidden"
-        android:descendantFocusability="afterDescendants"
         android:layout_above="@+id/shoppinglistSeperator"
         android:id="@+id/shoppinglistListView" />
 </RelativeLayout>
