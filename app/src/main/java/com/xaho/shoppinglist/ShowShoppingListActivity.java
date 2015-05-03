@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ListView;
 
 /**
@@ -18,14 +19,21 @@ public class ShowShoppingListActivity extends Activity implements View.OnDragLis
     private ShoppingList shoppingList = new ShoppingList();
     private ShoppingListItemAdapter shoppingListItemAdapter;
     private String tag = "ShowShoppingListActivity";
+    ListView lv;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         Intent intent = getIntent();
         shoppingList = (ShoppingList)intent.getSerializableExtra("shoppinglist");
+
         setContentView(R.layout.shoppinglist);
-        ListView lv = (ListView)findViewById(R.id.shoppinglistListView);
+
+        ((EditText)findViewById(R.id.shoppinglistNameEditText)).setText(shoppingList.Name);
+        lv = (ListView)findViewById(R.id.shoppinglistListView);
+
         shoppingListItemAdapter = new ShoppingListItemAdapter(getApplicationContext(),shoppingList.items);
+
         lv.setAdapter(shoppingListItemAdapter);
         lv.setOnDragListener(this);
         /*lv.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {

@@ -1,6 +1,8 @@
 package com.xaho.shoppinglist;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,7 +32,8 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
     public View getView(final int position, View convertView, ViewGroup parent) {
         LayoutInflater li = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = li.inflate(R.layout.shopping_list_entry,parent,false);
-        rowView.setOnClickListener(new View.OnClickListener() {
+
+        /*rowView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.i(tag, "Pressed on position: " + position);
@@ -39,17 +42,37 @@ public class ShoppingListAdapter extends ArrayAdapter<ShoppingList> {
                 //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 ((MainActivity)context).startActivityForResult(intent,position);
             }
-        });
+        });*/
         TextView tv = (TextView)rowView.findViewById(R.id.listEntryTextView);
         tv.setText(shoppingList.get(position).Name);
-        ImageButton ib = (ImageButton)rowView.findViewById(R.id.deleteButton);
-        ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                shoppingList.remove(position);
-                notifyDataSetChanged();
-            }
-        });
         return rowView;
+    }
+
+    public void removeSure(ShoppingList object) {
+        super.remove(object);
+    }
+
+    @Override
+    public void remove(final ShoppingList object) {
+        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                switch (which){
+                    case DialogInterface.BUTTON_POSITIVE:
+                        //Yes button clicked
+                        removeSure(object);
+                        break;
+
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        //No button clicked
+                        break;
+                }
+            }
+        };
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setMessage("Delete shopping list?").setPositiveButton("Yes", dialogClickListener)
+                .setNegativeButton("No", dialogClickListener).show();
+        //super.remove(object);
     }
 }

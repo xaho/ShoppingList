@@ -1,6 +1,7 @@
 package com.xaho.shoppinglist;
 
 import android.app.Activity;
+import android.app.ListActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -8,14 +9,15 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 
-public class MainActivity extends ActionBarActivity {
-    SimpleCursorAdapter mAdapter;
+public class MainActivity extends ListActivity {
     private ShoppingList template = new ShoppingList();
     private ArrayList<ShoppingList> shoppingList = new ArrayList<>();
     private String tag = "shoppinglist";
@@ -27,43 +29,37 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         template.Name = "Template";
 
-        ListView lv = (ListView)findViewById(R.id.listView);
         shoppingListAdapter = new ShoppingListAdapter(MainActivity.this,shoppingList);
 
-        lv.setAdapter(shoppingListAdapter);
-        /*lv.setClickable(true);
+        ListView lv = getListView();
+        setListAdapter(shoppingListAdapter);
 
+        SwipeDismissListViewTouchListener touchListener =
+                new SwipeDismissListViewTouchListener(
+                        lv,
+                        new SwipeDismissListViewTouchListener.OnDismissCallback() {
+                            @Override
+                            public void onDismiss(ListView listView, int[] reverseSortedPositions) {
+                                for (int position : reverseSortedPositions) {
+                                    shoppingListAdapter.remove(shoppingListAdapter.getItem(position));
+                                }
+                                shoppingListAdapter.notifyDataSetChanged();
+                            }
+        });
+
+        lv.setOnTouchListener(touchListener);
+        lv.setOnScrollListener(touchListener.makeScrollListener());
+        //lv.setClickable(true);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Log.i(tag,"Pressed on position: " + position);
                 Intent intent = new Intent(getApplicationContext(),ShowShoppingListActivity.class);
                 intent.putExtra("shoppinglist",shoppingList.get(position));
-                startActivity(intent);
+                //startActivity(intent);
+                startActivityForResult(intent,position);
             }
-        });*/
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
+        });
     }
 
     public void onClick(View view) {
